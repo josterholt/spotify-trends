@@ -1,0 +1,29 @@
+{
+  "name": "spotify-playlist",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "start:dev": "webpack-dev-server --config webpack.dev.config.js"
+  },
+  "dependencies": {
+    "overmind": "^19.1.1",
+    "overmind-react": "^20.1.1",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "spotify-web-api-node": "^5.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-react": "^7.0.0",
+    "@types/react": "^16.9.2",
+    "babel-loader": "^8.0.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "ts-loader": "^6.1.0",
+    "typescript": "^3.6.3",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.8",
+    "webpack-dev-server": "^3.8.0"
+  }
+}
