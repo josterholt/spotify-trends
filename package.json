@@ -6,6 +6,8 @@
     "start:dev": "webpack-dev-server --config webpack.dev.config.js"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/data-grid": "^4.0.0-alpha.21",
     "overmind": "^19.1.1",
     "overmind-react": "^20.1.1",
     "react": "^16.9.0",
@@ -17,6 +19,7 @@
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
     "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.1",
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^3.0.0",
     "html-webpack-plugin": "^3.2.0",

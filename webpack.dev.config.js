@@ -19,7 +19,7 @@ const path = require('path');
     module: {
       rules: [
         {
-          test: /\.(js|jsx|tsx)$/,
+          test: /\.(js|jsx|tsx|ts)$/,
           exclude: /node_modules/,
           use: {
             loader: "babel-loader"
@@ -33,7 +33,7 @@ const path = require('path');
       ]
     },
     resolve: {
-      extensions: ['.tsx', 'ts', '.js']
+      extensions: ['.tsx', 'ts', '.js', '.jsx']
     },
     output: {
       filename: '[name].bundle.js',
