@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "start:dev": "webpack-dev-server --config webpack.dev.config.js"
+    "start": "webpack-dev-server --config webpack.dev.config.js"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.3",
