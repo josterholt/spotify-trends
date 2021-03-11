@@ -34,6 +34,7 @@ var spotifyApi = new SpotifyWebApi({
 const homepage = function () {
     const [spotifyTimeRange, setSpotifyTimeRange] = useState('short_term')
     const queryClient = useQueryClient()
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
 
     /**
      * userQuery Hooks
@@ -42,7 +43,7 @@ const homepage = function () {
         isFetched: isUserProfileFetched,
         data: userProfileData,
     }: any = useQuery(
-        'userProfileData',
+        'userProfileData' + hash.access_token || '',
         () =>
             new Promise((resolve, reject) => {
                 if (!isUserProfileFetched && 'access_token' in hash) {
@@ -106,7 +107,7 @@ const homepage = function () {
         </a>
     )
 
-    if (isUserProfileFetched && userProfileData) {
+    if (userProfileData) {
         loginLink = 'Logged in as ' + userProfileData.display_name
     }
 
@@ -154,7 +155,7 @@ const homepage = function () {
             </Grid>
             <Grid item xs={12}>
                 <Paper className={classes.paper}>
-                    <TrackGrid tracks={data} />
+                    {userProfileData ? <TrackGrid tracks={data} /> : null}
                 </Paper>
             </Grid>
         </div>
