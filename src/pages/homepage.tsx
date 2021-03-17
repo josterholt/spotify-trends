@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid'
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import LoginPrompt from '../components/LoginPrompt'
+import SpotifyWebApi from 'spotify-web-api-node'
 
 // Get the hash of the url
 const hash = window.location.hash
@@ -18,7 +19,7 @@ const hash = window.location.hash
         return initial
     }, {})
 
-var SpotifyWebApi = require('spotify-web-api-node')
+//var SpotifyWebApi = require('spotify-web-api-node')
 var redirectUri = window.location.origin,
     clientId = 'b244422e8a674d8fa6d67b4e3eda3f2d'
 var spotifyApi = new SpotifyWebApi({
@@ -43,6 +44,7 @@ const homepage = function () {
                     spotifyApi.setAccessToken(hash.access_token)
                     spotifyApi.getMe().then(
                         function (data: any) {
+                            console.table(data.body)
                             resolve(data.body)
                         },
                         function (err: any) {

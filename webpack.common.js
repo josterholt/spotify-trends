@@ -3,11 +3,9 @@ const path = require('path');
   const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
   module.exports = {
-    mode: 'development',
     entry: {
       app: './src/index.tsx',
     },
-    devtool: 'inline-source-map',
     plugins: [
       // new CleanWebpackPlugin(['dist/*']) for < v2 versions of CleanWebpackPlugin
       new CleanWebpackPlugin(),
