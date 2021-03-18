@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-import {useQuery, useQueryClient} from 'react-query'
 import {
     DataGrid,
     GridRowsProp,
@@ -8,27 +7,7 @@ import {
 } from '@material-ui/data-grid'
 import Grid from '@material-ui/core/Grid'
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles'
-
-var SpotifyWebApi = require('spotify-web-api-node')
-var redirectUri = window.location.origin,
-    clientId = 'b244422e8a674d8fa6d67b4e3eda3f2d'
-
-var spotifyApi = new SpotifyWebApi({
-    redirectUri: redirectUri,
-    clientId: clientId,
-})
-
-// Get the hash of the url
-const hash = window.location.hash
-    .substring(1)
-    .split('&')
-    .reduce(function (initial: any, item: any) {
-        if (item) {
-            var parts = item.split('=')
-            initial[parts[0]] = decodeURIComponent(parts[1])
-        }
-        return initial
-    }, {})
+import {useSpotifyFavoriteTracks} from '../../hooks/spotify'
 
 const columns: GridColDef[] = [
     {
@@ -48,39 +27,8 @@ const columns: GridColDef[] = [
 ]
 
 export default function ({userProfileData}: any) {
-    const queryClient = useQueryClient()
     const [spotifyTimeRange, setSpotifyTimeRange] = useState('short_term')
-    const {isFetched, data: tracks, error}: any = useQuery(
-        'trackData-' + spotifyTimeRange,
-        () =>
-            new Promise((resolve, reject) => {
-                if (!isFetched && 'access_token' in hash) {
-                    spotifyApi.setAccessToken(hash.access_token)
-                    spotifyApi
-                        .getMyTopTracks({
-                            limit: 50,
-                            time_range: spotifyTimeRange,
-                        })
-                        .then(
-                            function (data: any) {
-                                resolve(data.body.items)
-                            },
-                            function (err: any) {
-                                reject(err)
-                            },
-                        )
-                }
-            }),
-        {
-            staleTime: 1000 * 60 * 60 * 24, // 24 hours
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-            refetchOnReconnect: false,
-            initialData: () => {
-                return queryClient.getQueryData('trackData')
-            },
-        },
-    )
+    const [tracks] = useSpotifyFavoriteTracks(spotifyTimeRange)
 
     let rows: GridRowsProp = []
     if (tracks && tracks.length > 0) {
@@ -99,23 +47,8 @@ export default function ({userProfileData}: any) {
         })
     }
 
-    const useStyles = makeStyles((theme: Theme) =>
-        createStyles({
-            root: {
-                flexGrow: 1,
-            },
-            paper: {
-                padding: theme.spacing(2),
-                textAlign: 'center',
-                color: theme.palette.text.secondary,
-            },
-        }),
-    )
-
-    const classes = useStyles()
-
     return (
-        <div className={classes.root} style={{width: '100%'}}>
+        <div style={{width: '100%'}}>
             <Grid container spacing={3}>
                 <Grid
                     item

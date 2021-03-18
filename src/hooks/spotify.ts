@@ -10,13 +10,9 @@ var spotifyApi = new SpotifyWebApi({
 })
 
 export const useSpotifyProfile: any = function () {
-    const [spotifyProfile, setSpotifyProfile] = useState()
-
+    const [spotifyProfile, setSpotifyProfile] = useState([])
     const queryClient = useQueryClient()
 
-    /**
-     * userQuery Hooks
-     */
     const hash = getHash()
     const fetchKey = 'userProfileData-' + (hash.access_token || '')
 
@@ -48,7 +44,7 @@ export const useSpotifyProfile: any = function () {
     )
 
     useEffect(() => {
-        setSpotifyProfile(data)
+        setSpotifyProfile([data])
     }, [data])
 
     return spotifyProfile
