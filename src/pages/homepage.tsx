@@ -11,29 +11,27 @@ const homepage = function () {
     const [userProfileData] = useSpotifyProfile()
 
     return (
-        <div style={{width: '100%'}}>
-            <Grid container spacing={3}>
-                <Grid item xs={12}>
-                    <h1
-                        style={{
-                            alignItems: 'justify-center',
-                            paddingLeft: '16px',
-                        }}
-                    >
-                        Top Listened Tracks
-                    </h1>
-                </Grid>
-                <Grid item xs={12}>
-                    <Paper style={{textAlign: 'center'}}>
-                        {userProfileData ? (
-                            <TrackGrid userProfileData={userProfileData} />
-                        ) : (
-                            <LoginPrompt />
-                        )}
-                    </Paper>
-                </Grid>
+        <Grid container>
+            <Grid item xs={12}>
+                <h1
+                    style={{
+                        alignItems: 'justify-center',
+                        paddingLeft: '16px',
+                    }}
+                >
+                    Top Listened Tracks
+                </h1>
             </Grid>
-        </div>
+            <Grid item xs={12}>
+                <Paper style={{textAlign: 'center'}}>
+                    {userProfileData ? (
+                        <TrackGrid userProfileData={userProfileData} />
+                    ) : (
+                        <LoginPrompt />
+                    )}
+                </Paper>
+            </Grid>
+        </Grid>
     )
 }
 

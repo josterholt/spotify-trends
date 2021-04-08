@@ -60,7 +60,6 @@ export const useSpotifyFavoriteTracks: any = function (time_range: string) {
         () =>
             new Promise((resolve, reject) => {
                 const hash = getHash()
-                console.log({isFetched, isFetching})
                 if ('access_token' in hash) {
                     spotifyApi.setAccessToken(hash.access_token)
                     spotifyApi
@@ -92,4 +91,27 @@ export const useSpotifyFavoriteTracks: any = function (time_range: string) {
         setTracks([data])
     }, [data])
     return tracks
+}
+
+export const useSpotifyPlayer: any = function () {
+    return {
+        play: function (context_uri: string, position: number) {
+            const hash = getHash()
+
+            if ('access_token' in hash) {
+                const options = {
+                    context_uri: context_uri,
+                    offset: {
+                        position: position,
+                    },
+                    position_ms: 0,
+                }
+                spotifyApi.setAccessToken(hash.access_token)
+                spotifyApi.play(options, function () {
+                    console.log(arguments)
+                })
+            }
+        },
+        pause: () => {},
+    }
 }
