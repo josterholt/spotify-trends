@@ -1,4 +1,5 @@
-<img src="https://travis-ci.com/josterholt/spotify-trends.svg?branch=main" />
+[![Build Status](https://travis-ci.com/josterholt/spotify-trends.svg?branch=main)](https://travis-ci.com/josterholt/spotify-trends)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/75edf018-f74c-4d99-919a-6a584c5f1089/deploy-status)](https://app.netlify.com/sites/josterholt-spotify-trends/deploys)
 
 # Spotify Trends
 

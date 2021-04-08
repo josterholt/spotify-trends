@@ -12,8 +12,8 @@ export default function () {
         <Grid container>
             <Grid item xs={12}>
                 <Button
-                    variant="contained"
                     color="primary"
+                    variant="contained"
                     href={`${spotifyAuthEndpoint}?client_id=${spotifyClientID}&redirect_uri=${
                         window.location.origin
                     }&scope=${spotifyScopes.join(

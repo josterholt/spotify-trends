@@ -17,19 +17,20 @@ const homepage = function () {
                     style={{
                         alignItems: 'justify-center',
                         paddingLeft: '16px',
+                        textAlign: 'center',
                     }}
                 >
                     Top Listened Tracks
                 </h1>
             </Grid>
             <Grid item xs={12}>
-                <Paper style={{textAlign: 'center'}}>
+                <div style={{textAlign: 'center'}}>
                     {userProfileData ? (
                         <TrackGrid userProfileData={userProfileData} />
                     ) : (
                         <LoginPrompt />
                     )}
-                </Paper>
+                </div>
             </Grid>
         </Grid>
     )
