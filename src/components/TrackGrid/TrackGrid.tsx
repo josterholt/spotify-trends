@@ -7,13 +7,42 @@ import {
 } from '@material-ui/data-grid'
 import Grid from '@material-ui/core/Grid'
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles'
-import {useSpotifyFavoriteTracks, useSpotifyPlayer} from '../../hooks/spotify'
+import {
+    useSpotifyFavoriteTracks,
+    useSpotifyPlayer,
+    useSpotifyDevices,
+} from '../../hooks/spotify'
 import PlayIcon from '../../assets/images/playIcon.png'
+import _ from 'lodash'
+
+interface ITrackInfo {
+    activeDevice: string
+    contextURI: string
+    offset: number
+}
 
 export default function ({userProfileData}: any) {
     const [spotifyTimeRange, setSpotifyTimeRange] = useState('short_term')
     const [tracks] = useSpotifyFavoriteTracks(spotifyTimeRange)
-    const player = useSpotifyPlayer() // not sure if I'm using the custom hook correctly here. Doesn't look like a normal use.
+    const player: IuseSpotifyPlayer = useSpotifyPlayer() // not sure if I'm using the custom hook correctly here. Doesn't look like a normal use.
+    const {devices, activeDevice, setActiveDevice} = useSpotifyDevices()
+    const [trackInfo, setTrackInfo] = useState<ITrackInfo>({
+        activeDevice: null,
+        contextURI: null,
+        offset: 0,
+    })
+
+    useEffect(() => {
+        const active_device = _.find(devices, {isActive: true})
+        if (active_device) {
+            setActiveDevice(active_device.id)
+            return
+        }
+
+        if (devices.length > 0) {
+            setActiveDevice(devices[0].id)
+        }
+    }, [devices])
 
     const columns: GridColDef[] = [
         {
@@ -27,15 +56,17 @@ export default function ({userProfileData}: any) {
 
                 const [playOverlay, setPlayOverlay] = useState(false)
                 const playSong = () => {
-                    console.log({context_uri, offset})
-                    player.play(context_uri, offset)
+                    if (!player.isPlaying) {
+                        player.play(activeDevice, context_uri, offset)
+                    } else {
+                        player.pause(activeDevice)
+                    }
                 }
 
                 return (
                     <div
                         style={{position: 'absolute'}}
                         onMouseEnter={() => {
-                            console.log('foo')
                             setPlayOverlay(true)
                         }}
                         onMouseLeave={() => setPlayOverlay(false)}
@@ -102,6 +133,7 @@ export default function ({userProfileData}: any) {
                     }}
                 >
                     <label htmlFor={'time_range'}>Time Range:</label>
+                    &nbsp;
                     <select
                         name="time_range"
                         onChange={el => setSpotifyTimeRange(el.target.value)}
@@ -109,6 +141,23 @@ export default function ({userProfileData}: any) {
                         <option value="short_term">Last 4 Weeks</option>
                         <option value="medium_term">Last 6 Months</option>
                         <option value="long_term">Last Several Years</option>
+                    </select>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <label htmlFor={'device'}>Device:</label>
+                    &nbsp;
+                    <select
+                        name="device"
+                        onChange={el => setActiveDevice(el.target.value)}
+                        defaultValue={activeDevice}
+                    >
+                        {devices &&
+                            devices.map(function (device: any) {
+                                return (
+                                    <option key={device.id} value={device.id}>
+                                        {device.name}
+                                    </option>
+                                )
+                            })}
                     </select>
                 </Grid>
                 <Grid

@@ -94,24 +94,54 @@ export const useSpotifyFavoriteTracks: any = function (time_range: string) {
 }
 
 export const useSpotifyPlayer: any = function () {
+    const [isPlaying, setPlaying] = useState(false)
+
     return {
-        play: function (context_uri: string, position: number) {
+        play: function (
+            device_id: string,
+            context_uri: string,
+            position: number,
+        ) {
             const hash = getHash()
 
             if ('access_token' in hash) {
                 const options = {
-                    context_uri: context_uri,
+                    device_id,
+                    context_uri,
                     offset: {
                         position: position,
                     },
                     position_ms: 0,
                 }
                 spotifyApi.setAccessToken(hash.access_token)
+
                 spotifyApi.play(options, function () {
-                    console.log(arguments)
+                    setPlaying(true)
                 })
             }
         },
-        pause: () => {},
+        pause: (device_id: string) => {
+            spotifyApi.pause({device_id}, function () {
+                setPlaying(false)
+            })
+        },
+        isPlaying,
+    }
+}
+
+export const useSpotifyDevices: any = function (): IuseSpotifyDevices {
+    const [activeDevice, setActiveDevice] = useState(null)
+    const [availableDevices, setAvailableDevices] = useState([])
+
+    useEffect(() => {
+        spotifyApi.getMyDevices().then(function (data: any) {
+            setAvailableDevices(data.body.devices)
+        })
+    }, [])
+
+    return {
+        devices: availableDevices,
+        activeDevice,
+        setActiveDevice,
     }
 }

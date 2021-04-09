@@ -4,5 +4,6 @@ const spotifyScopes = [
     'user-top-read',
     'user-read-currently-playing',
     'user-modify-playback-state',
+    'user-read-playback-state',
 ]
 export {spotifyClientID, spotifyAuthEndpoint, spotifyScopes}
