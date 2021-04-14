@@ -7,6 +7,7 @@ import {QueryClient, QueryClientProvider} from 'react-query'
 import {persistQueryClient} from 'react-query/persistQueryClient-experimental'
 import {createLocalStoragePersistor} from 'react-query/createLocalStoragePersistor-experimental'
 import {ReactQueryDevtools} from 'react-query/devtools'
+import {BrowserRouter} from 'react-router-dom'
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -34,7 +35,9 @@ const overmind = createOvermind(config, {
 ReactDOM.render(
     <Provider value={overmind}>
         <QueryClientProvider client={queryClient}>
-            <Homepage />
+            <BrowserRouter>
+                <Homepage />
+            </BrowserRouter>
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     </Provider>,

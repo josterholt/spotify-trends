@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useQuery, useQueryClient} from 'react-query'
-import {getHash} from '../utils/helpers'
+import {getAccessToken} from '../utils/helpers'
 var SpotifyWebApi = require('spotify-web-api-node')
 import {spotifyClientID} from '../utils/settings'
 
@@ -13,15 +13,15 @@ export const useSpotifyProfile: any = function () {
     const [spotifyProfile, setSpotifyProfile] = useState([])
     const queryClient = useQueryClient()
 
-    const hash = getHash()
-    const fetchKey = 'userProfileData-' + (hash.access_token || '')
+    const accessToken = getAccessToken()
+    const fetchKey = 'userProfileData-' + (accessToken || '')
 
     const {isFetched, data}: any = useQuery(
         fetchKey,
         () =>
             new Promise((resolve, reject) => {
-                if ('access_token' in hash) {
-                    spotifyApi.setAccessToken(hash.access_token)
+                if (accessToken) {
+                    spotifyApi.setAccessToken(accessToken)
                     spotifyApi.getMe().then(
                         function (data: any) {
                             resolve(data.body)
@@ -59,9 +59,9 @@ export const useSpotifyFavoriteTracks: any = function (time_range: string) {
         fetchKey,
         () =>
             new Promise((resolve, reject) => {
-                const hash = getHash()
-                if ('access_token' in hash) {
-                    spotifyApi.setAccessToken(hash.access_token)
+                const accessToken = getAccessToken()
+                if (accessToken) {
+                    spotifyApi.setAccessToken(accessToken)
                     spotifyApi
                         .getMyTopTracks({
                             limit: 50,
@@ -102,9 +102,9 @@ export const useSpotifyPlayer: any = function () {
             context_uri: string,
             position: number,
         ) {
-            const hash = getHash()
+            const accessToken = getAccessToken()
 
-            if ('access_token' in hash) {
+            if (accessToken) {
                 const options = {
                     device_id,
                     context_uri,
@@ -113,7 +113,7 @@ export const useSpotifyPlayer: any = function () {
                     },
                     position_ms: 0,
                 }
-                spotifyApi.setAccessToken(hash.access_token)
+                spotifyApi.setAccessToken(accessToken)
 
                 spotifyApi.play(options, function () {
                     setPlaying(true)
