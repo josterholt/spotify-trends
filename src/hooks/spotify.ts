@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import {useQuery, useQueryClient} from 'react-query'
-import {getAccessToken} from '../utils/helpers'
-var SpotifyWebApi = require('spotify-web-api-node')
+import {getAccessToken, clearAccessToken} from '../utils/helpers'
+import SpotifyWebApi from 'spotify-web-api-node'
 import {spotifyClientID} from '../utils/settings'
 
-var spotifyApi = new SpotifyWebApi({
+var spotifyApi: SpotifyWebApi = new SpotifyWebApi({
     redirectUri: window.location.origin,
     clientId: spotifyClientID,
 })
@@ -27,6 +27,9 @@ export const useSpotifyProfile: any = function () {
                             resolve(data.body)
                         },
                         function (err: any) {
+                            if (err.indexOf('access denied') !== -1) {
+                                clearAccessToken()
+                            }
                             reject(err)
                         },
                     )
@@ -50,12 +53,12 @@ export const useSpotifyProfile: any = function () {
     return spotifyProfile
 }
 
-export const useSpotifyFavoriteTracks: any = function (time_range: string) {
+export const useSpotifyFavoriteTracks: any = function (time_range: any) {
     const [tracks, setTracks] = useState([])
 
     const fetchKey = 'trackData-' + time_range
     const queryClient = useQueryClient()
-    const {isFetched, isFetching, data}: any = useQuery(
+    const {data}: any = useQuery(
         fetchKey,
         () =>
             new Promise((resolve, reject) => {
@@ -65,7 +68,7 @@ export const useSpotifyFavoriteTracks: any = function (time_range: string) {
                     spotifyApi
                         .getMyTopTracks({
                             limit: 50,
-                            time_range: time_range,
+                            time_range,
                         })
                         .then(
                             function (data: any) {
@@ -87,9 +90,11 @@ export const useSpotifyFavoriteTracks: any = function (time_range: string) {
             },
         },
     )
+
     useEffect(() => {
         setTracks([data])
     }, [data])
+
     return tracks
 }
 

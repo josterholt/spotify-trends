@@ -18,6 +18,10 @@ export function extractAndStoreAccessToken(hash: string) {
     return accessToken
 }
 
+export function clearAccessToken() {
+    localStorage.removeItem('access_token')
+}
+
 export function clearQueryString() {
     window.history.pushState({}, '', '/')
 }

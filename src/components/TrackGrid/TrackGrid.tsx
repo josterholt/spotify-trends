@@ -14,12 +14,7 @@ import {
 } from '../../hooks/spotify'
 import PlayIcon from '../../assets/images/playIcon.png'
 import _ from 'lodash'
-
-interface ITrackInfo {
-    activeDevice: string
-    contextURI: string
-    offset: number
-}
+import {clearAccessToken} from '../../utils/helpers'
 
 export default function ({userProfileData}: any) {
     const [spotifyTimeRange, setSpotifyTimeRange] = useState('short_term')
@@ -48,7 +43,7 @@ export default function ({userProfileData}: any) {
         {
             field: 'album_cover',
             headerName: ' ',
-            width: 150,
+            width: 175,
             type: 'string',
             renderCell: (params: GridCellParams) => {
                 const context_uri: string = params.row.album_uri
@@ -165,7 +160,16 @@ export default function ({userProfileData}: any) {
                     xs={3}
                     style={{textAlign: 'right', paddingRight: '20px'}}
                 >
-                    Logged in as {userProfileData.display_name}
+                    Logged in as {userProfileData.display_name} (
+                    <a
+                        href={'#'}
+                        onClick={() => {
+                            clearAccessToken()
+                        }}
+                    >
+                        log out
+                    </a>
+                    )
                 </Grid>
             </Grid>
             <Grid item xs={12} style={{marginTop: '10px'}}>
