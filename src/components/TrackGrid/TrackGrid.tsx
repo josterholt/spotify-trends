@@ -15,29 +15,26 @@ import {
 import PlayIcon from '../../assets/images/playIcon.png'
 import _ from 'lodash'
 import {clearAccessToken} from '../../utils/helpers'
+import ImageOverlay from '../ImageOverlay'
 
 export default function ({userProfileData}: any) {
     const [spotifyTimeRange, setSpotifyTimeRange] = useState('short_term')
     const [tracks] = useSpotifyFavoriteTracks(spotifyTimeRange)
+
     const player: IuseSpotifyPlayer = useSpotifyPlayer() // not sure if I'm using the custom hook correctly here. Doesn't look like a normal use.
-    const {devices, activeDevice, setActiveDevice} = useSpotifyDevices()
-    const [trackInfo, setTrackInfo] = useState<ITrackInfo>({
-        activeDevice: null,
-        contextURI: null,
-        offset: 0,
-    })
+    const {availableDevices} = useSpotifyDevices()
 
     useEffect(() => {
-        const active_device = _.find(devices, {isActive: true})
+        const active_device = _.find(availableDevices, {isActive: true})
         if (active_device) {
-            setActiveDevice(active_device.id)
+            player.setActiveDevice(active_device.id)
             return
         }
 
-        if (devices.length > 0) {
-            setActiveDevice(devices[0].id)
+        if (availableDevices.length > 0) {
+            player.setActiveDevice(availableDevices[0].id)
         }
-    }, [devices])
+    }, [availableDevices])
 
     const columns: GridColDef[] = [
         {
@@ -49,43 +46,49 @@ export default function ({userProfileData}: any) {
                 const context_uri: string = params.row.album_uri
                 const offset: number = params.row.track_number - 1
 
-                const [playOverlay, setPlayOverlay] = useState(false)
-                const playSong = () => {
-                    if (!player.isPlaying) {
-                        player.play(activeDevice, context_uri, offset)
-                    } else {
-                        player.pause(activeDevice)
-                    }
-                }
-
                 return (
-                    <div
-                        style={{position: 'absolute'}}
-                        onMouseEnter={() => {
-                            setPlayOverlay(true)
-                        }}
-                        onMouseLeave={() => setPlayOverlay(false)}
+                    <ImageOverlay
+                        overlayImage={PlayIcon}
+                        onClickHandler={() =>
+                            player.togglePlay(context_uri, offset)
+                        }
                     >
                         <img src={params.value.toString()} width={150} />
-                        <div
-                            style={{
-                                position: 'absolute',
-                                top: '25%',
-                                left: '25%',
-                                opacity: '0.75',
-                            }}
-                        >
-                            <a onClick={() => playSong()}>
-                                {playOverlay ? (
-                                    <img
-                                        src={PlayIcon}
-                                        style={{width: '75px'}}
-                                    />
-                                ) : null}
-                            </a>
-                        </div>
-                    </div>
+                    </ImageOverlay>
                 )
+
+                // return (
+                //     <div
+                //         style={{position: 'absolute'}}
+                //         onMouseEnter={() => {
+                //             setPlayOverlay(true)
+                //         }}
+                //         onMouseLeave={() => setPlayOverlay(false)}
+                //     >
+                //         <img src={params.value.toString()} width={150} />
+                //         <div
+                //             style={{
+                //                 position: 'absolute',
+                //                 top: '25%',
+                //                 left: '25%',
+                //                 opacity: '0.75',
+                //             }}
+                //         >
+                //             <a
+                //                 onClick={() =>
+                //                     player.togglePlay(context_uri, offset)
+                //                 }
+                //             >
+                //                 {playOverlay ? (
+                //                     <img
+                //                         src={PlayIcon}
+                //                         style={{width: '75px'}}
+                //                     />
+                //                 ) : null}
+                //             </a>
+                //         </div>
+                //     </div>
+                // )
             },
             disableClickEventBubbling: true,
         },
@@ -142,11 +145,11 @@ export default function ({userProfileData}: any) {
                     &nbsp;
                     <select
                         name="device"
-                        onChange={el => setActiveDevice(el.target.value)}
-                        defaultValue={activeDevice}
+                        onChange={el => player.setActiveDevice(el.target.value)}
+                        defaultValue={player.activeDevice}
                     >
-                        {devices &&
-                            devices.map(function (device: any) {
+                        {availableDevices &&
+                            availableDevices.map(function (device: any) {
                                 return (
                                     <option key={device.id} value={device.id}>
                                         {device.name}
