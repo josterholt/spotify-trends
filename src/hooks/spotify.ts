@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import {useQuery, useQueryClient} from 'react-query'
 import {getAccessToken, clearAccessToken} from '../utils/helpers'
-import SpotifyWebApi from 'spotify-web-api-node'
+var SpotifyWebApi = require('spotify-web-api-node')
 import {spotifyClientID} from '../utils/settings'
 
-var spotifyApi: SpotifyWebApi = new SpotifyWebApi({
+var spotifyApi: typeof SpotifyWebApi = new SpotifyWebApi({
     redirectUri: window.location.origin,
     clientId: spotifyClientID,
 })
