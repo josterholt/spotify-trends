@@ -32,8 +32,8 @@
         ]
     },
     "dependencies": {
-        "@material-ui/core": "^4.11.3",
-        "@material-ui/data-grid": "^4.0.0-alpha.21",
+        "@material-ui/core": "^4.11.4",
+        "@material-ui/data-grid": "^4.0.0-alpha.28",
         "lodash": "^4.17.21",
         "overmind": "^19.1.1",
         "overmind-react": "^20.1.1",

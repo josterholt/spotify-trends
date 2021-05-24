@@ -8,7 +8,9 @@
       "target": "es5",
       "jsx": "react",
       "allowJs": true,
-      "allowSyntheticDefaultImports": true
+      "allowSyntheticDefaultImports": true,
+      "lib": ["dom", "ES6"],
+      "esModuleInterop": true
     },
     "include": ["src/**/*", "index.d.ts"],
     "exclude": ["node_modules"]    

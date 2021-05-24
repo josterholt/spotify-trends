@@ -1,25 +1,49 @@
-import React from 'react'
+import * as React from 'react'
+import {QueryClient, QueryClientProvider} from 'react-query'
+import {persistQueryClient} from 'react-query/persistQueryClient-experimental'
+import {createLocalStoragePersistor} from 'react-query/createLocalStoragePersistor-experimental'
 import {useLocation} from 'react-router-dom'
 import Homepage from '../pages/homepage'
 import {render} from '@testing-library/react'
 import {mocked} from 'ts-jest/utils'
 
 jest.mock('react-router-dom', () => ({
-    __esModule: true,
-    useLocation: jest.fn(),
+    ...jest.requireActual('react-router-dom'),
+    useLocation: () => ({
+        hash: 'example.com/api/test?a=b&hash=12345',
+    }),
 }))
-const mockedUseLocation = mocked(useLocation, true)
 
 describe('Spotify App', () => {
     it('displays login button for anonymous users', () => {
-        mockedUseLocation.mockReturnValue(
-            'https://example.com/api/test?a=b&hash=12345',
-        )
         const hash = useLocation()
         expect(window.localStorage['access_token']).toBeUndefined() // Localstorage access_token will be undefined by default
 
+        const queryClient = new QueryClient({
+            defaultOptions: {
+                queries: {
+                    cacheTime: 1000 * 60 * 60 * 24, // 24 hours
+                },
+            },
+        })
+
+        const localStoragePersistor = createLocalStoragePersistor()
+        persistQueryClient({
+            queryClient,
+            persistor: localStoragePersistor,
+        })
+        const config = {
+            state: {
+                title: 'Spotify Trends',
+            },
+        }
+
         // Component will render with log in button
-        const {getByText} = render(<Homepage />)
+        const {getByText} = render(
+            <QueryClientProvider client={queryClient}>
+                <Homepage />
+            </QueryClientProvider>,
+        )
     })
     it.todo('displayed name for logged in user')
 
