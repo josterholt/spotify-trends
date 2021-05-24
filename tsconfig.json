@@ -12,6 +12,6 @@
       "lib": ["dom", "ES6"],
       "esModuleInterop": true
     },
-    "include": ["src/**/*", "index.d.ts"],
+    "include": ["src/**/*", "index.d.ts","./jest-setup.ts"],
     "exclude": ["node_modules"]    
   }

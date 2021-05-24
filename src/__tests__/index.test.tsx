@@ -6,6 +6,7 @@ import {useLocation} from 'react-router-dom'
 import Homepage from '../pages/homepage'
 import {render} from '@testing-library/react'
 import {mocked} from 'ts-jest/utils'
+import '@testing-library/jest-dom'
 
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
@@ -39,12 +40,16 @@ describe('Spotify App', () => {
         }
 
         // Component will render with log in button
-        const {getByText} = render(
+        const {getByTestId} = render(
             <QueryClientProvider client={queryClient}>
                 <Homepage />
             </QueryClientProvider>,
         )
+
+        const el = getByTestId('js-login-spotify')
+        expect(el).toBeVisible()
     })
+
     it.todo('displayed name for logged in user')
 
     it.todo('displays log out link for logged in user')

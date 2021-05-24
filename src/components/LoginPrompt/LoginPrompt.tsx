@@ -12,6 +12,7 @@ export default function () {
         <Grid container>
             <Grid item xs={12}>
                 <Button
+                    data-testid="js-login-spotify"
                     color="primary"
                     variant="contained"
                     href={`${spotifyAuthEndpoint}?client_id=${spotifyClientID}&redirect_uri=${
